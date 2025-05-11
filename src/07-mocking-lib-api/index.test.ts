@@ -12,7 +12,7 @@ describe('throttledGetDataFromApi', () => {
 
     jest.spyOn(axios, 'create');
     jest.mock('axios', () => ({
-      create: jest.fn(() => (jest.requireActual('axios').create({ baseURL })))
+      create: jest.fn(() => jest.requireActual('axios').create({ baseURL })),
     }));
 
     throttledGetDataFromApi('');
@@ -25,9 +25,13 @@ describe('throttledGetDataFromApi', () => {
     const baseURL = 'https://jsonplaceholder.typicode.com';
     const relativePath = '/posts';
 
-    const originalAxiosInstance = jest.requireActual('axios').create({ baseURL });
+    const originalAxiosInstance = jest
+      .requireActual('axios')
+      .create({ baseURL });
     const mockGet = jest.fn(() => originalAxiosInstance.get());
-    jest.spyOn(axios, 'create').mockReturnValue({ ...originalAxiosInstance, get: mockGet});
+    jest
+      .spyOn(axios, 'create')
+      .mockReturnValue({ ...originalAxiosInstance, get: mockGet });
 
     throttledGetDataFromApi(relativePath);
     jest.advanceTimersByTime(THROTTLE_TIME);
@@ -38,15 +42,19 @@ describe('throttledGetDataFromApi', () => {
 
   test('should return response data', async () => {
     const baseURL = 'https://jsonplaceholder.typicode.com';
-    const response = { data: "Hello World!" };
-    
+    const response = { data: 'Hello World!' };
+
     const mockGet = jest.fn(() => response);
-    const originalAxiosInstance = jest.requireActual('axios').create({ baseURL });
-    jest.spyOn(axios, 'create').mockReturnValue({ ...originalAxiosInstance, get: mockGet});
+    const originalAxiosInstance = jest
+      .requireActual('axios')
+      .create({ baseURL });
+    jest
+      .spyOn(axios, 'create')
+      .mockReturnValue({ ...originalAxiosInstance, get: mockGet });
 
     const responseData = await throttledGetDataFromApi('');
     jest.advanceTimersByTime(THROTTLE_TIME);
-    
+
     expect(mockGet).toHaveBeenCalled();
     expect(responseData).toEqual(response.data);
   });

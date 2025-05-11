@@ -8,7 +8,6 @@ jest.mock('./index', () => ({
   unmockedFunction: jest.requireActual('./index').unmockedFunction,
 }));
 
-
 describe('partial mocking', () => {
   afterAll(() => {
     jest.unmock('./index');
